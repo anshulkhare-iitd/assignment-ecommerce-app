@@ -2,8 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { Product, useCartStore } from '@/store/cartStore';
+import { Product } from '@/store/cartStore';
 import { useToast } from './ToastProvider';
+import { useAddToCart } from '@/hooks/useCartMutations';
 
 interface ProductCardProps {
   product: Product;
@@ -11,14 +12,21 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
   const discountedPrice = product.price * (1 - product.discountPercentage / 100);
-  const addToCart = useCartStore((state) => state.addToCart);
   const { addToast } = useToast();
+  const addToCartMutation = useAddToCart();
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault(); // Prevent navigation to product page
     e.stopPropagation();
-    addToCart(product);
-    addToast(`${product.title} added to cart!`, 'success');
+    
+    addToCartMutation.mutate(product, {
+      onSuccess: () => {
+        addToast(`${product.title} added to cart!`, 'success');
+      },
+      onError: () => {
+        addToast(`Failed to add ${product.title} to cart`, 'error');
+      }
+    });
   };
 
   return (
@@ -41,7 +49,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         
         <div className="p-4 flex flex-col flex-grow">
           <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors min-h-[3.5rem] flex items-start">
-            {product.title}{'asnasasasasas sdfsadfsadf sdfsadf sdfsadf sadfsadf '}
+            {product.title}
           </h3>
           
           <div className="flex items-center mb-2 flex-shrink-0">
@@ -85,10 +93,15 @@ export default function ProductCard({ product }: ProductCardProps) {
             
             <button
               onClick={handleAddToCart}
-              disabled={product.stock === 0}
+              disabled={product.stock === 0 || addToCartMutation.isPending}
               className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium py-2 px-4 rounded-md transition-colors duration-200 text-sm"
             >
-              {product.stock === 0 ? 'Out of Stock' : 'Add to Cart'}
+              {addToCartMutation.isPending 
+                ? 'Adding...' 
+                : product.stock === 0 
+                  ? 'Out of Stock' 
+                  : 'Add to Cart'
+              }
             </button>
           </div>
         </div>

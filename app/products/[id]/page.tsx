@@ -1,47 +1,36 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Product } from '@/store/cartStore';
-import { useCartStore } from '@/store/cartStore';
+import { useProduct } from '@/hooks/useProduct';
+import { useAddToCart } from '@/hooks/useCartMutations';
+import { useToast } from '@/components/ToastProvider';
 
 export default function ProductDetail() {
   const params = useParams();
   const productId = params.id as string;
-  const [product, setProduct] = useState<Product | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   
-  const addToCart = useCartStore((state) => state.addToCart);
+  const { addToast } = useToast();
+  const addToCartMutation = useAddToCart();
+  const { data: product, isLoading, error } = useProduct(productId);
 
-  useEffect(() => {
-    async function fetchProduct() {
-      try {
-        setLoading(true);
-        const res = await fetch(`https://dummyjson.com/products/${productId}`);
-        
-        if (!res.ok) {
-          throw new Error('Product not found');
-        }
-        
-        const data = await res.json();
-        setProduct(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch product');
-      } finally {
-        setLoading(false);
+  const handleAddToCart = () => {
+    if (!product) return;
+    
+    addToCartMutation.mutate(product, {
+      onSuccess: () => {
+        addToast(`${product.title} added to cart!`, 'success');
+      },
+      onError: () => {
+        addToast(`Failed to add ${product.title} to cart`, 'error');
       }
-    }
+    });
+  };
 
-    if (productId) {
-      fetchProduct();
-    }
-  }, [productId]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-center min-h-96">
@@ -59,7 +48,7 @@ export default function ProductDetail() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center py-12">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Product Not Found</h1>
-          <p className="text-gray-600 mb-6">{error || 'The product you are looking for does not exist.'}</p>
+          <p className="text-gray-600 mb-6">{error?.message || 'The product you are looking for does not exist.'}</p>
           <Link 
             href="/"
             className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -181,10 +170,16 @@ export default function ProductDetail() {
           </div>
 
           <button
-            onClick={() => addToCart(product)}
-            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            onClick={handleAddToCart}
+            disabled={product.stock === 0 || addToCartMutation.isPending}
+            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
           >
-            Add to Cart
+            {addToCartMutation.isPending 
+              ? 'Adding to Cart...' 
+              : product.stock === 0 
+                ? 'Out of Stock' 
+                : 'Add to Cart'
+            }
           </button>
         </div>
       </div>
