@@ -5,6 +5,7 @@ import { useCartStore } from '@/store/cartStore';
 
 export default function Header() {
   const totalCount = useCartStore((state) => state.totalCount);
+  console.log(totalCount,'totalCount');
 
   return (
     <header className="bg-white shadow-md sticky top-0 z-50">

@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { useCartStore } from '@/store/cartStore';
 
 export default function CartPage() {
-  const { items, removeFromCart, updateQuantity, totalCount, totalPrice, clearCart } = useCartStore();
+  const items = useCartStore((state) => state.items);
+  const { removeFromCart, updateQuantity, clearCart, totalCount, totalPrice } = useCartStore();
 
   if (items.length === 0) {
     return (
@@ -27,7 +28,7 @@ export default function CartPage() {
             </svg>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h1>
-          <p className="text-gray-600 mb-6">Looks like you haven't added any items to your cart yet.</p>
+          <p className="text-gray-600 mb-6">Looks like you haven&apos;t added any items to your cart yet.</p>
           <Link 
             href="/"
             className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
