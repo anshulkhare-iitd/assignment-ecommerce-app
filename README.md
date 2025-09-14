@@ -2,6 +2,8 @@
 
 A modern, full-featured e-commerce web application built with Next.js 15, TypeScript, and Tailwind CSS. This app integrates with the DummyJSON API to provide a complete shopping experience with advanced filtering, search, and cart management.
 
+**🌐 Live Demo**: [https://ecommerce-app-fawn-two.vercel.app](https://ecommerce-app-fawn-two.vercel.app)
+
 ## 🚀 Features
 
 ### Core Functionality
@@ -86,6 +88,78 @@ npm run type-check   # Run TypeScript type checking
 
 ### Environment Setup
 No environment variables are required as the app uses the public DummyJSON API. The application is ready to run immediately after installation.
+
+## 🌐 Deployment
+
+### Live Demo
+**🚀 Production URL**: [https://ecommerce-app-fawn-two.vercel.app](https://ecommerce-app-fawn-two.vercel.app)
+
+The application is deployed on Vercel and is live for testing and demonstration purposes.
+
+### Deploy to Vercel
+
+#### Option 1: One-Click Deploy
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/anshulkhare-iitd/assignment-ecommerce-app)
+
+#### Option 2: Manual Deployment
+
+1. **Install Vercel CLI:**
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Login to Vercel:**
+   ```bash
+   vercel login
+   ```
+
+3. **Deploy from your project directory:**
+   ```bash
+   vercel
+   ```
+
+4. **For production deployment:**
+   ```bash
+   vercel --prod
+   ```
+
+#### Option 3: GitHub Integration
+
+1. **Connect your GitHub repository to Vercel:**
+   - Go to [vercel.com](https://vercel.com)
+   - Click "New Project"
+   - Import your GitHub repository
+   - Vercel will automatically detect Next.js and configure the build settings
+
+2. **Automatic deployments:**
+   - Every push to `main` branch triggers automatic deployment
+   - Pull requests get preview deployments
+   - Custom domains can be configured in project settings
+
+### Deployment Configuration
+
+The application is configured with:
+- **Build Command**: `next build --turbopack`
+- **Output Directory**: Next.js default (`.next`)
+- **Node Version**: 22.x
+- **Framework**: Next.js (auto-detected)
+
+### Environment Variables
+
+No environment variables are required for basic functionality. The app uses the public DummyJSON API.
+
+### Performance Features
+
+- **Global CDN**: Vercel's edge network for fast loading worldwide
+- **Automatic HTTPS**: SSL certificates provided automatically
+- **Image Optimization**: Next.js Image component with Vercel's image optimization
+- **Static Generation**: Pre-rendered pages for optimal performance
+
+### Monitoring & Analytics
+
+- **Vercel Analytics**: Built-in performance monitoring
+- **Real-time Logs**: Available in Vercel dashboard
+- **Performance Insights**: Core Web Vitals tracking
 
 ## 🏗️ Development Process & Trade-offs
 
