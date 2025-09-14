@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# E-Commerce Store
 
-## Getting Started
+A modern e-commerce web application built with Next.js 15, TypeScript, and Tailwind CSS. This app integrates with the DummyJSON API to display products and uses Zustand for state management with persistent cart functionality.
 
-First, run the development server:
+## 🚀 Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Product Catalog**: Browse products from DummyJSON API with images, ratings, and pricing
+- **Product Details**: Detailed product pages with image galleries and descriptions
+- **Shopping Cart**: Add/remove items with quantity management
+- **Persistent Cart**: Cart state persists across browser sessions using localStorage
+- **Responsive Design**: Mobile-first design with Tailwind CSS
+- **TypeScript**: Full type safety throughout the application
+
+## 📁 Project Structure
+
+```
+ecommerce-app/
+├── app/
+│   ├── layout.tsx              # Root layout with Header
+│   ├── page.tsx                # Home page with product grid
+│   ├── cart/
+│   │   └── page.tsx            # Shopping cart page
+│   └── products/
+│       └── [id]/
+│           └── page.tsx        # Product detail page
+├── components/
+│   ├── Header.tsx              # Navigation header with cart count
+│   └── ProductCard.tsx         # Product card component
+├── store/
+│   └── cartStore.ts            # Zustand store for cart management
+└── public/                     # Static assets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🛠️ Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+2. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
 
-## Learn More
+3. **Open your browser:**
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-To learn more about Next.js, take a look at the following resources:
+## 🏗️ Architecture & Trade-offs
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### State Management
+- **Zustand**: Chosen for its simplicity and minimal boilerplate compared to Redux
+- **Persistence**: Cart state automatically saves to localStorage using Zustand's persist middleware
+- **Type Safety**: Full TypeScript integration with proper interfaces
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Data Fetching
+- **Server Components**: Used for initial product data fetching on the home page for better SEO
+- **Client Components**: Used for interactive features like cart management and product details
+- **Error Handling**: Graceful fallbacks for API failures
 
-## Deploy on Vercel
+### UI/UX Decisions
+- **Tailwind CSS**: For rapid development and consistent design system
+- **Responsive Grid**: Mobile-first approach with responsive product grids
+- **Loading States**: Proper loading indicators and error states
+- **Accessibility**: Semantic HTML and proper ARIA labels
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Performance Optimizations
+- **Image Optimization**: Next.js Image component with proper sizing
+- **Code Splitting**: Automatic code splitting with Next.js App Router
+- **Caching**: Strategic use of cache control for API calls
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔧 Known Limitations
+
+1. **API Dependency**: Relies on DummyJSON API availability
+2. **No Authentication**: No user accounts or order history
+3. **No Payment Processing**: Demo-only checkout functionality
+4. **Limited Search**: No search or filtering capabilities
+5. **No Categories**: No category-based navigation
+
+## 🚀 Future Enhancements
+
+- User authentication and profiles
+- Search and filtering functionality
+- Category-based navigation
+- Order history and tracking
+- Payment integration
+- Product reviews and ratings
+- Wishlist functionality
+- Admin dashboard for inventory management
+
+## 📦 Dependencies
+
+- **Next.js 15**: React framework with App Router
+- **TypeScript**: Type safety and better developer experience
+- **Tailwind CSS**: Utility-first CSS framework
+- **Zustand**: Lightweight state management
+- **DummyJSON API**: Product data source
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## 📄 License
+
+This project is for educational purposes. The DummyJSON API is used for demonstration only.
