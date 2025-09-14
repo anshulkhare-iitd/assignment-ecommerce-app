@@ -8,8 +8,47 @@ interface ProductsResponse {
   limit: number;
 }
 
-async function fetchProducts(): Promise<Product[]> {
-  const response = await fetch('https://dummyjson.com/products', {
+interface ProductsQueryParams {
+  search?: string;
+  category?: string;
+  limit?: number;
+  skip?: number;
+  sortBy?: 'title' | 'price' | 'rating';
+  order?: 'asc' | 'desc';
+}
+
+async function fetchProducts(params: ProductsQueryParams = {}): Promise<ProductsResponse> {
+  const searchParams = new URLSearchParams();
+  
+  if (params.search) {
+    searchParams.append('q', params.search);
+  }
+  if (params.limit) {
+    searchParams.append('limit', params.limit.toString());
+  }
+  if (params.skip) {
+    searchParams.append('skip', params.skip.toString());
+  }
+  if (params.sortBy) {
+    searchParams.append('sortBy', params.sortBy);
+  }
+  if (params.order) {
+    searchParams.append('order', params.order);
+  }
+
+  let url = 'https://dummyjson.com/products';
+  
+  if (params.category) {
+    url = `https://dummyjson.com/products/category/${params.category}`;
+  } else if (params.search) {
+    url = 'https://dummyjson.com/products/search';
+  }
+  
+  if (searchParams.toString()) {
+    url += `?${searchParams.toString()}`;
+  }
+
+  const response = await fetch(url, {
     cache: 'no-store'
   });
   
@@ -17,14 +56,13 @@ async function fetchProducts(): Promise<Product[]> {
     throw new Error('Failed to fetch products');
   }
   
-  const data: ProductsResponse = await response.json();
-  return data.products || [];
+  return response.json();
 }
 
-export function useProducts() {
+export function useProducts(params: ProductsQueryParams = {}) {
   return useQuery({
-    queryKey: ['products'],
-    queryFn: fetchProducts,
+    queryKey: ['products', params],
+    queryFn: () => fetchProducts(params),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
   });
